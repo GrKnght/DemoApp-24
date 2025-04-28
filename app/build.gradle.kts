@@ -30,6 +30,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        buildConfig = true
+    }
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -40,6 +43,7 @@ dependencies {
     implementation(project(path = ":core:base"))
     implementation(project(path = ":core:data"))
     implementation(project(path = ":core:domain"))
+    implementation(project(path = ":core:network"))
 
     // Feature
     implementation(project(path = ":feature:mainpage"))

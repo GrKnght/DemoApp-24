@@ -26,6 +26,7 @@ include(":app")
 include(":core:data")
 include(":core:domain")
 include(":core:base")
+include(":core:network")
 
 // Feature
 include(":feature:mainpage")

@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.itis.demo24.data.repository.DogFactsRepositoryImpl
-import ru.itis.demo24.domain.repositories.DogsFactsRepository
+import ru.itis.demo24.data.repository.SongDataRepositoryImpl
+import ru.itis.demo24.domain.repositories.SongDataRepository
 import javax.inject.Singleton
 
 @Module
@@ -14,5 +14,5 @@ interface DataBinderModule {
 
     @Binds
     @Singleton
-    fun bindDogRepository_toImpl(impl: DogFactsRepositoryImpl): DogsFactsRepository
+    fun bindSongDataRepositoryToImplementation(impl: SongDataRepositoryImpl): SongDataRepository
 }

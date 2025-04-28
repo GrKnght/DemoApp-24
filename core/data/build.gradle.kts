@@ -32,16 +32,13 @@ android {
 }
 
 dependencies {
+    implementation(project(path = ":core:network"))
     implementation(project(path = ":core:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
-    // Hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
-
-
-    implementation(libs.bundles.network.deps)
 }
