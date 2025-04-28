@@ -3,10 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.plugin)
+    id(libs.plugins.gradle.secrets.plugin.get().pluginId)
 }
 
 android {
-    namespace = "ru.itis.demo24.mainpage"
+    namespace = "ru.itis.demoapp24.core.network"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -14,6 +15,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("String", "GENIUS_BASE_URL", "\"https://api.genius.com/\"")
     }
 
     buildTypes {
@@ -26,32 +29,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
 
     buildFeatures {
-        viewBinding = true
+        buildConfig = true
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 
 dependencies {
-    implementation(project(path = ":core:base"))
-    implementation(project(path = ":core:domain"))
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.fragment)
-    implementation(libs.material)
-    implementation(libs.lifecycle.viewmodel)
-
-    // Coroutines
-    implementation(libs.coroutines)
+    // Network
+    implementation(libs.bundles.network.deps)
 
     // Hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
-
-    // VBPD
-    implementation(libs.view.binding.property.delegate)
 }
