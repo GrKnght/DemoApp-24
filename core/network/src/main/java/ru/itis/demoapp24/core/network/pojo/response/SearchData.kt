@@ -10,6 +10,8 @@ data class SearchData(
 data class SearchResult(
     @SerializedName("id")
     val songId: Int?,
+    @SerializedName("title")
+    val songTitle: String?,
     @SerializedName("artist_names")
     val artistName: String?,
     @SerializedName("song_art_image_thumbnail_url")
