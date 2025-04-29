@@ -1,12 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt.plugin)
 }
 
 android {
-    namespace = "ru.itis.demo24.songdetails"
+    namespace = "ru.itis.demo24.navigation"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -26,30 +24,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        viewBinding = true
-    }
     kotlinOptions {
         jvmTarget = "11"
     }
 }
 
 dependencies {
-    implementation(project(path = ":core:base"))
-    implementation(project(path = ":core:base-feature"))
-    implementation(project(path = ":core:utils"))
-    implementation(project(path = ":core:domain"))
-    implementation(project(path = ":core:navigation"))
-
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.fragment)
-    implementation(libs.material)
-
-    // Hilt
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
-
-    // VBPD
-    implementation(libs.viewbinding.property.delegate)
+    implementation(libs.navigation.fragment)
 }

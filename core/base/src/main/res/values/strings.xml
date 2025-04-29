@@ -4,4 +4,8 @@
     <!-- SEARCH PAGE -->
     <string name="type_search_query_hint">Введите поисковый запрос</string>
     <!-- SEARCH PAGE END -->
+
+    <!-- SONG DETAILS PAGE-->
+    <string name="song_details_header">Подробности</string>
+    <!-- SONG DETAILS PAGE END-->
 </resources>

@@ -76,6 +76,6 @@ class SearchFragment : BaseFragment(searchR.layout.fragment_search) {
     }
 
     private fun onListItemClick(resultModel: SearchResultModel) {
-        println("TEST TAG - Item clicked $resultModel")
+        viewModel.goToSongDetails()
     }
 }

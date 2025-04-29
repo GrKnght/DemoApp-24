@@ -45,6 +45,7 @@ dependencies {
     implementation(project(path = ":core:base-feature"))
     implementation(project(path = ":core:data"))
     implementation(project(path = ":core:domain"))
+    implementation(project(path = ":core:navigation"))
     implementation(project(path = ":core:network"))
     implementation(project(path = ":core:utils"))
 
@@ -59,6 +60,10 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.constraintlayout)
+
+    // Jetpack Navigation
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
 
     // Hilt
     implementation(libs.hilt)
