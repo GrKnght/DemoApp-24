@@ -2,6 +2,7 @@ package ru.itis.demo24.search.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -15,6 +16,8 @@ import ru.itis.demo24.basefeature.recycler.decorator.HorizontalDecorator
 import ru.itis.demo24.domain.model.SearchResultModel
 import ru.itis.demo24.search.databinding.FragmentSearchBinding
 import ru.itis.demo24.search.ui.adapter.SearchRvAdapter
+import ru.itis.demo24.search.ui.state.SearchScreenEvent
+import ru.itis.demo24.search.ui.state.SearchScreenState
 import ru.itis.demoapp24.core.utils.extensions.dpToPx
 import ru.itis.demoapp24.core.utils.extensions.hideKeyboard
 import ru.itis.demo24.search.R as searchR
@@ -31,7 +34,8 @@ class SearchFragment : BaseFragment(searchR.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        observeData()
+        observeStateChanges()
+
     }
 
     private fun initViews() {
@@ -49,33 +53,73 @@ class SearchFragment : BaseFragment(searchR.layout.fragment_search) {
         }
         viewBinding.searchEt.doOnTextChanged { input, _, _, _ ->
             if (input?.isNotEmpty() == true) {
-                viewModel.onSearchQueryChanged(input = input.toString())
+                viewModel.reduce(
+                    event = SearchScreenEvent.OnSearchQueryChanged(query = input.toString())
+                )
             }
         }
     }
 
-    private fun observeData() {
+    private fun observeStateChanges() {
         with(viewBinding) {
-            viewModel.searchResultState.observe { searchResult ->
-                rvAdapter?.updateItems(searchResult)
-            }
+            viewModel.pageState.observe { screenState ->
+                when (screenState) {
+                    is SearchScreenState.Loading -> {
+                        loadingContainer.isVisible = true
+                        loadingContainer.requestFocus()
+                    }
 
-            viewModel.loadingState.observe { isLoadingVisible ->
-                loadingContainer.isVisible = isLoadingVisible
-            }
+                    is SearchScreenState.SearchResult -> {
+                        hideKeyboard()
+                        loadingContainer.isVisible = false
+                        loadingContainer.clearFocus()
+                        rvAdapter?.updateItems(searchResult = screenState.result)
+                    }
 
-            viewModel.inputFocusState.observe { isClearFocus ->
-                if (isClearFocus) {
-                    loadingContainer.requestFocus()
-                } else {
-                    loadingContainer.clearFocus()
-                    hideKeyboard()
+                    is SearchScreenState.Error -> {
+                        hideKeyboard()
+                        loadingContainer.isVisible = false
+                        loadingContainer.clearFocus()
+                        Toast.makeText(requireContext(), "Error occurred: ${screenState.ex}", Toast.LENGTH_SHORT).show()
+                    }
+
+                    else -> Unit
                 }
             }
         }
     }
 
+    /** Второй вариант реализации PageState */
+//    private fun observePageStateData() {
+//        with(viewBinding) {
+//            viewModel.pageStateData.observe { data ->
+//                when {
+//                    data.isLoading -> {
+//                        loadingContainer.isVisible = true
+//                        loadingContainer.requestFocus()
+//                    }
+//
+//                    data.error != null -> {
+//                        hideKeyboard()
+//                        loadingContainer.isVisible = false
+//                        loadingContainer.clearFocus()
+//                        Toast.makeText(requireContext(), "Error occurred: ${data.error}", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                    data.searchResult.isNotEmpty() -> {
+//                        hideKeyboard()
+//                        loadingContainer.isVisible = false
+//                        loadingContainer.clearFocus()
+//                        rvAdapter?.updateItems(searchResult = data.searchResult)
+//                    }
+//
+//                    else -> Unit
+//                }
+//            }
+//        }
+//    }
+
     private fun onListItemClick(resultModel: SearchResultModel) {
-        viewModel.goToSongDetails()
+        viewModel.reduce(event = SearchScreenEvent.OnListItemClick(item = resultModel))
     }
 }

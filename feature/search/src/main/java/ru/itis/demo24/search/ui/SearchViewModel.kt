@@ -9,9 +9,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import ru.itis.demo24.domain.model.SearchResultModel
 import ru.itis.demo24.domain.usecase.SearchDataUseCase
 import ru.itis.demo24.navigation.NavMain
+import ru.itis.demo24.search.ui.state.SearchScreenEvent
+import ru.itis.demo24.search.ui.state.SearchScreenState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,25 +21,31 @@ class SearchViewModel @Inject constructor(
     private val navMain: NavMain,
 ) : ViewModel() {
 
+    private val _pageState = MutableStateFlow<SearchScreenState>(value = SearchScreenState.Initial)
+    val pageState = _pageState.asStateFlow()
+
+    /** Второй вариант реализации PageState */
+    // private val _pageStateData = MutableStateFlow(value = SearchScreenStateData())
+    // val pageStateData = _pageStateData.asStateFlow()
+
     private val searchFlow = MutableStateFlow(value = "")
-
-    private val _loadingState = MutableStateFlow(value = false)
-    val loadingState = _loadingState.asStateFlow()
-
-    private val _searchResultState = MutableStateFlow<List<SearchResultModel>>(value = emptyList())
-    val searchResultState = _searchResultState.asStateFlow()
-
-    private val _inputFocusState = MutableStateFlow(value = false)
-    val inputFocusState = _inputFocusState.asStateFlow()
 
     init {
         observeTextChanges()
     }
 
-    fun onSearchQueryChanged(input: String) = searchFlow.tryEmit(input)
+    fun reduce(event: SearchScreenEvent) {
+        when (event) {
+            is SearchScreenEvent.OnSearchQueryChanged -> {
+                searchFlow.tryEmit(event.query)
+            }
 
-    fun goToSongDetails() {
-        navMain.goToDetailsPage()
+            is SearchScreenEvent.OnListItemClick -> {
+                navMain.goToDetailsPage()
+            }
+
+            else -> throw IllegalStateException("Incorrect event: $event")
+        }
     }
 
     @OptIn(FlowPreview::class)
@@ -55,19 +62,19 @@ class SearchViewModel @Inject constructor(
 
     private fun searchForQuery(query: String) {
         viewModelScope.launch {
-            _loadingState.value = true
-            _inputFocusState.value = true
+            _pageState.value = SearchScreenState.Loading
+            // Другой вариант реализации PageState
+            // _pageStateData.value = _pageStateData.value.copy(isLoading = true)
             delay(2000L)
             runCatching {
                 searchDataUseCase.invoke(query = query)
             }.onSuccess { result ->
-                _loadingState.value = false
-                _inputFocusState.value = false
-                _searchResultState.value = result
+                _pageState.value = SearchScreenState.SearchResult(result = result)
             }.onFailure {
-                _loadingState.value = false
-                _inputFocusState.value = false
-                println("TEST TAG - Error Occurred: $it")
+                _pageState.value = SearchScreenState.Error(
+                    message = it.message,
+                    ex = it
+                )
             }
         }
     }
