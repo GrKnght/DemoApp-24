@@ -1,5 +1,6 @@
 package ru.itis.demo24.search.ui.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,7 @@ import ru.itis.demo24.search.ui.viewholder.SearchResultViewHolder
 
 class SearchRvAdapter(
     private val requestManager: RequestManager,
+    private val onItemClick: (SearchResultModel) -> Unit,
 ) : RecyclerView.Adapter<SearchResultViewHolder>() {
 
     private var searchItems = mutableListOf<SearchResultModel>()
@@ -22,6 +24,7 @@ class SearchRvAdapter(
                 false
             ),
             requestManager = requestManager,
+            onItemClick = onItemClick,
         )
     }
 
@@ -30,4 +33,13 @@ class SearchRvAdapter(
     }
 
     override fun getItemCount(): Int = searchItems.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItems(searchResult: List<SearchResultModel>) {
+        if (searchItems.isNotEmpty()) {
+            searchItems.clear()
+        }
+        searchItems.addAll(searchResult)
+        notifyDataSetChanged()
+    }
 }

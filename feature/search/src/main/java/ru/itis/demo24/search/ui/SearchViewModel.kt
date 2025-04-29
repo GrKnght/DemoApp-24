@@ -57,9 +57,7 @@ class SearchViewModel @Inject constructor(
             }.onSuccess { result ->
                 _loadingState.value = false
                 _inputFocusState.value = false
-                result.forEach {
-                    println("TEST TAG - Received Song: ${it.title}")
-                }
+                _searchResultState.value = result
             }.onFailure {
                 _loadingState.value = false
                 _inputFocusState.value = false

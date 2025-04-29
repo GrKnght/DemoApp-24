@@ -11,8 +11,11 @@ import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import dev.androidbroadcast.vbpd.viewBinding
 import ru.itis.demo24.basefeature.BaseFragment
+import ru.itis.demo24.basefeature.recycler.decorator.HorizontalDecorator
+import ru.itis.demo24.domain.model.SearchResultModel
 import ru.itis.demo24.search.databinding.FragmentSearchBinding
 import ru.itis.demo24.search.ui.adapter.SearchRvAdapter
+import ru.itis.demoapp24.core.utils.extensions.dpToPx
 import ru.itis.demoapp24.core.utils.extensions.hideKeyboard
 import ru.itis.demo24.search.R as searchR
 
@@ -33,10 +36,16 @@ class SearchFragment : BaseFragment(searchR.layout.fragment_search) {
 
     private fun initViews() {
         if (rvAdapter == null) {
-            rvAdapter = SearchRvAdapter(requestManager = Glide.with(this))
+            rvAdapter = SearchRvAdapter(
+                requestManager = Glide.with(this),
+                onItemClick = ::onListItemClick,
+            )
         }
         viewBinding.searchResultRv.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            val padding = 16f.dpToPx(requireContext())
+            addItemDecoration(HorizontalDecorator(padding = padding))
+            adapter = rvAdapter
         }
         viewBinding.searchEt.doOnTextChanged { input, _, _, _ ->
             if (input?.isNotEmpty() == true) {
@@ -47,6 +56,10 @@ class SearchFragment : BaseFragment(searchR.layout.fragment_search) {
 
     private fun observeData() {
         with(viewBinding) {
+            viewModel.searchResultState.observe { searchResult ->
+                rvAdapter?.updateItems(searchResult)
+            }
+
             viewModel.loadingState.observe { isLoadingVisible ->
                 loadingContainer.isVisible = isLoadingVisible
             }
@@ -60,5 +73,9 @@ class SearchFragment : BaseFragment(searchR.layout.fragment_search) {
                 }
             }
         }
+    }
+
+    private fun onListItemClick(resultModel: SearchResultModel) {
+        println("TEST TAG - Item clicked $resultModel")
     }
 }
