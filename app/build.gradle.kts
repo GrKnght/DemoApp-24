@@ -32,6 +32,7 @@ android {
     }
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -41,20 +42,27 @@ android {
 dependencies {
     // Core
     implementation(project(path = ":core:base"))
+    implementation(project(path = ":core:base-feature"))
     implementation(project(path = ":core:data"))
     implementation(project(path = ":core:domain"))
     implementation(project(path = ":core:network"))
+    implementation(project(path = ":core:utils"))
 
     // Feature
     implementation(project(path = ":feature:mainpage"))
+    implementation(project(path = ":feature:search"))
+    implementation(project(path = ":feature:song-details"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.fragment)
     implementation(libs.androidx.constraintlayout)
 
     // Hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.viewbinding.property.delegate)
 }

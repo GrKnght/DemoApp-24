@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ITIS-DemoApp24</string>
+
+    <!-- SEARCH PAGE -->
+    <string name="type_search_query_hint">Введите поисковый запрос</string>
+    <!-- SEARCH PAGE END -->
+</resources>

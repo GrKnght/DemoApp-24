@@ -30,3 +30,7 @@ include(":core:network")
 
 // Feature
 include(":feature:mainpage")
+include(":feature:search")
+include(":feature:song-details")
+include(":core:utils")
+include(":core:base-feature")

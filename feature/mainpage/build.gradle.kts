@@ -53,5 +53,5 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     // VBPD
-    implementation(libs.view.binding.property.delegate)
+    implementation(libs.viewbinding.property.delegate)
 }

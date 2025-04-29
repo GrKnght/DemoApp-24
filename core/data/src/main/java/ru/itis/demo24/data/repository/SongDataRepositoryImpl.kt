@@ -12,6 +12,6 @@ class SongDataRepositoryImpl @Inject constructor(
 ) : SongDataRepository {
 
     override suspend fun getSongById(songId: String): SongDataModel {
-        return geniusApi.getSongById(songId = songId).let(responseMapper::map)
+        return geniusApi.getSongById(songId = songId).let(responseMapper::mapToSongDataModel)
     }
 }
