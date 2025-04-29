@@ -39,6 +39,7 @@ dependencies {
     implementation(project(path = ":core:base-feature"))
     implementation(project(path = ":core:domain"))
     implementation(project(path = ":core:utils"))
+    implementation(project(path = ":core:navigation"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

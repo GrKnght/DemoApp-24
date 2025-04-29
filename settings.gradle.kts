@@ -27,10 +27,11 @@ include(":core:data")
 include(":core:domain")
 include(":core:base")
 include(":core:network")
+include(":core:utils")
+include(":core:base-feature")
+include(":core:navigation")
 
 // Feature
 include(":feature:mainpage")
 include(":feature:search")
 include(":feature:song-details")
-include(":core:utils")
-include(":core:base-feature")

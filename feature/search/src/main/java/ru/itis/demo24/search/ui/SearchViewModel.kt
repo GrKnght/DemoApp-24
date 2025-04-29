@@ -11,11 +11,13 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import ru.itis.demo24.domain.model.SearchResultModel
 import ru.itis.demo24.domain.usecase.SearchDataUseCase
+import ru.itis.demo24.navigation.NavMain
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchDataUseCase: SearchDataUseCase,
+    private val navMain: NavMain,
 ) : ViewModel() {
 
     private val searchFlow = MutableStateFlow(value = "")
@@ -34,6 +36,10 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearchQueryChanged(input: String) = searchFlow.tryEmit(input)
+
+    fun goToSongDetails() {
+        navMain.goToDetailsPage()
+    }
 
     @OptIn(FlowPreview::class)
     private fun observeTextChanges() {
